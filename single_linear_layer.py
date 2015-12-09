@@ -11,8 +11,11 @@ import pprint as pp
 
 # Data importation via google data import script.
 # orlfaces is a class which store training, validation and testing sets as numpy arrays.
-orlfaces = lo.orlfaces_loader(["/home/shortyp/orlfaces_tensorflow/orl_faces/s1/",
-                               "/home/shortyp/orlfaces_tensorflow/orl_faces/s2/"])
+orlfaces = lo.orlfaces_loader(["/home/mee/TensorFlowORLFaces/orl_faces/s1/",
+                               "/home/mee/TensorFlowORLFaces/orl_faces/s2/",
+                               "/home/mee/TensorFlowORLFaces/orl_faces/s3/",
+                               "/home/mee/TensorFlowORLFaces/orl_faces/s4/",
+                               "/home/mee/TensorFlowORLFaces/orl_faces/s5/"])
 
 # A Session is use to  execute ops in the graph.
 # Here we use an InteractiveSession to gain flexibility
@@ -27,7 +30,7 @@ sess = tf.InteractiveSession()
 # the first dimension, aka the batch size, can be of any size"
 x = tf.placeholder("float", shape=[None, 10304])
 # "The output classes (y_) will also consist of a 2d tensor, where each row is a one-hot 2-dimensional vector"
-y_ = tf.placeholder("float", shape=[None, 2])
+y_ = tf.placeholder("float", shape=[None, 5])
 
 # We define the weights W and biases b for our model. To handle it we use Variable,
 # which "is a value that lives in TF computation graph. It can be used and even
@@ -35,8 +38,8 @@ y_ = tf.placeholder("float", shape=[None, 2])
 # Both parameter are initialize as tensor full of zeros.
 # "W is a 10304x2 matrix (because we have 10304 input features and 2 outputs), and b is
 # a 2-dimentional vector (because we have 2 classes).
-W = tf.Variable(tf.zeros([10304, 2]))
-b = tf.Variable(tf.zeros([2]))
+W = tf.Variable(tf.zeros([10304, 5]))
+b = tf.Variable(tf.zeros([5]))
 
 # To use Variable within a session, they must be initialized using that session.
 # "This step takes the initial values (in this case tensors full of zeros) that have
@@ -60,12 +63,12 @@ cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
 # So this line will "add new operations to the computation graph.
 # These operations included ones to compute gradients, compute parameter update steps,
 # and apply update steps to the parameters."
-train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
+train_step = tf.train.GradientDescentOptimizer(1e-30).minimize(cross_entropy)
 
 # "The returned operation train_step, when run, will apply the gradient descent updates to the parameters.
 # Training the model can therefore be accomplished by repeatedly running train_step."
-for i in xrange(1000):
-    batch = orlfaces.train.next_batch(50)
+for i in xrange(10000):
+    batch = orlfaces.train.next_batch(3)
     train_step.run(feed_dict={x: batch[0], y_: batch[1]})
     if i % 100 == 0:
         print cross_entropy.eval({x: orlfaces.train.images, y_: orlfaces.train.labels}, sess)
