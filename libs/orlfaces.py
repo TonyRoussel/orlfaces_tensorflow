@@ -14,8 +14,8 @@ class Data(object):
         images = images.reshape(images.shape[0],
                                 images.shape[1] * images.shape[2])
         # Convert from [0, 255] -> [0.0, 1.0].
-        images = images.astype(numpy.float32)
-        images = numpy.multiply(images, 1.0 / 255.0)
+        images = images.astype(np.float32)
+        images = np.multiply(images, 1.0 / 255.0)
         self._images = images
         self._labels = labels
 
@@ -35,17 +35,25 @@ class Data(object):
 def orlfaces_loader(paths):
     nclass = len(paths)
     mtx_stack = list()
+    lbl_stack = list()
+    class_i = 0
     print "orlfaces_loader: found %d class" % nclass ######
     for path in paths:
         print "orlfaces_loader: in [%s]" % path #####
         for i, filename in enumerate(os.listdir(path)):
             img = misc.imread(path + filename)
+            label = np.ndarray(shape=(nclass,))
+            label[nclass- 1 - class_i] = 1.
             mtx_stack.append(img)
+            lbl_stack.append(label)
+        class_i = class_i + 1
     num_imgs = len(mtx_stack)
     rows = mtx_stack[0].shape[0]
     cols = mtx_stack[0].shape[1]
     channel = 1
-    return np.concatenate(mtx_stack, axis=1).reshape(num_imgs, rows, cols, channel)
+    imgs = np.concatenate(mtx_stack, axis=1).reshape(num_imgs, rows, cols, channel)
+    labels = np.vstack(lbl_stack)
+    return Data(imgs, labels)
                 
 
 
@@ -54,11 +62,9 @@ if __name__ == "__main__":
 
 
     orlfaces = orlfaces_loader(sys.argv[1:])
-    print orlfaces.shape
-    print orlfaces[0].shape
-    # print "type(orlfaces.images)"
-    # print type(orlfaces.images) # expect <type 'numpy.ndarray'>
-    # print orlfaces.images.shape # expect tuple w\ (num imgs, img flat size)
-    # print "type(orlfaces.labels)"
-    # print type(orlfaces.labels) # expect <type 'numpy.ndarray'>
-    # print orlfaces.labels.shape # expect tuple w\ (num imgs, number of class aka number of path)
+    print "type(orlfaces.images)"
+    print type(orlfaces.images) # expect <type 'numpy.ndarray'>
+    print orlfaces.images.shape # expect tuple w\ (num imgs, img flat size)
+    print "type(orlfaces.labels)"
+    print type(orlfaces.labels) # expect <type 'numpy.ndarray'>
+    print orlfaces.labels.shape # expect tuple w\ (num imgs, number of class aka number of path)
