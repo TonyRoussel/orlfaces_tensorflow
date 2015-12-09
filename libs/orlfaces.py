@@ -1,5 +1,6 @@
 from scipy import misc
 import os
+import numpy as np
 
 class Data(object):
     def __init__(self, images, labels):
@@ -31,14 +32,33 @@ class Data(object):
         return self._num_examples
 
 
+def orlfaces_loader(paths):
+    nclass = len(paths)
+    mtx_stack = list()
+    print "orlfaces_loader: found %d class" % nclass ######
+    for path in paths:
+        print "orlfaces_loader: in [%s]" % path #####
+        for i, filename in enumerate(os.listdir(path)):
+            img = misc.imread(path + filename)
+            mtx_stack.append(img)
+    num_imgs = len(mtx_stack)
+    rows = mtx_stack[0].shape[0]
+    cols = mtx_stack[0].shape[1]
+    channel = 1
+    return np.concatenate(mtx_stack, axis=1).reshape(num_imgs, rows, cols, channel)
+                
+
+
 if __name__ == "__main__":
     import sys
 
 
     orlfaces = orlfaces_loader(sys.argv[1:])
-    print "type(orlfaces.images)"
-    print type(orlfaces.images) # expect <type 'numpy.ndarray'>
-    print orlfaces.images.shape # expect tuple w\ (num imgs, img flat size)
-    print "type(orlfaces.labels)"
-    print type(orlfaces.labels) # expect <type 'numpy.ndarray'>
-    print orlfaces.labels.shape # expect tuple w\ (num imgs, number of class aka number of path)
+    print orlfaces.shape
+    print orlfaces[0].shape
+    # print "type(orlfaces.images)"
+    # print type(orlfaces.images) # expect <type 'numpy.ndarray'>
+    # print orlfaces.images.shape # expect tuple w\ (num imgs, img flat size)
+    # print "type(orlfaces.labels)"
+    # print type(orlfaces.labels) # expect <type 'numpy.ndarray'>
+    # print orlfaces.labels.shape # expect tuple w\ (num imgs, number of class aka number of path)
