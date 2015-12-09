@@ -34,9 +34,10 @@ def max_pool_2x2(x):
 
 
 
-mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-x = tf.placeholder("float", shape=[None, 784])
-y_ = tf.placeholder("float", shape=[None, 10])
+orlfaces = lo.orlfaces_loader(["/home/shortyp/orlfaces_tensorflow/orl_faces/s1/",
+                               "/home/shortyp/orlfaces_tensorflow/orl_faces/s2/"])
+x = tf.placeholder("float", shape=[None, 10304])
+y_ = tf.placeholder("float", shape=[None, 2])
 
 # "We can now implement our first layer
 # It will consist of convolution, followed by max pooling. The convolutional will compute
@@ -83,8 +84,8 @@ h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 
 # Last layer declaration with softmax activation like the one layer version
-W_fc2 = weight_variable([1024, 10])
-b_fc2 = bias_variable([10])
+W_fc2 = weight_variable([1024, 2])
+b_fc2 = bias_variable([2])
 y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 sess = tf.InteractiveSession()
@@ -100,10 +101,10 @@ correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 sess.run((tf.initialize_all_variables()))
 for i in xrange(1000):
-    batch = mnist.train.next_batch(50)
+    batch = orlfaces.train.next_batch(50)
     if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
         print "Step %d, training accuracy %g" % (i, train_accuracy)
     train_step.run(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 0.5})
 
-print "Test accuracy %g" % accuracy.eval(feed_dict = {x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
+print "Test accuracy %g" % accuracy.eval(feed_dict = {x: orlfaces.test.images, y_: orlfaces.test.labels, keep_prob: 1.0})
