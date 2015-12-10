@@ -51,7 +51,7 @@ b_conv1 = bias_variable([32])
 
 # "To apply the layer, we first reshape x to a 4d tensor, with the second and third dimensions 
 # corresponding to image width and height, and the final dimension corresponding to the number of color channels."
-x_image = tf.reshape(x, [-1, 28, 28, 1])
+x_image = tf.reshape(x, [-1, 112, 92, 1])
 
 # "We then convolve x_image with the weight tensor, add the bias, apply the ReLU function, and finally max pool."
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
