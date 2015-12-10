@@ -9,7 +9,6 @@ import pprint as pp
 # and to dictate which parts of the computation graph should be run"
 
 
-# Data importation via google data import script.
 # orlfaces is a class which store training, validation and testing sets as numpy arrays.
 orlfaces = lo.orlfaces_loader(["/home/mee/TensorFlowORLFaces/orl_faces/s1/",
                                "/home/mee/TensorFlowORLFaces/orl_faces/s2/",
@@ -26,20 +25,20 @@ sess = tf.InteractiveSession()
 # TensorFlow to run a computation.
 # The input (x) will be a 2d tensor of floating point number. The shape parameter
 # is not mandatory but we set it to catch bugs related to inconsistent tensor shapes.
-# "10304 is the dimensionality of a single flattened ORLFACES image, and None indicate that
+# "orlfaces.train.num_inputs is the dimensionality of a single flattened ORLFACES image, and None indicate that
 # the first dimension, aka the batch size, can be of any size"
-x = tf.placeholder("float", shape=[None, 10304])
+x = tf.placeholder("float", shape=[None, orlfaces.train.num_inputs])
 # "The output classes (y_) will also consist of a 2d tensor, where each row is a one-hot 2-dimensional vector"
-y_ = tf.placeholder("float", shape=[None, 5])
+y_ = tf.placeholder("float", shape=[None, orlfaces.train.num_classes])
 
 # We define the weights W and biases b for our model. To handle it we use Variable,
 # which "is a value that lives in TF computation graph. It can be used and even
 # modified by the computation"
 # Both parameter are initialize as tensor full of zeros.
-# "W is a 10304x2 matrix (because we have 10304 input features and 2 outputs), and b is
-# a 2-dimentional vector (because we have 2 classes).
-W = tf.Variable(tf.zeros([10304, 5]))
-b = tf.Variable(tf.zeros([5]))
+# "W is a orlfaces.train.num_inputs x orlfaces.train.num_classes matrix (because we have orlfaces.train.num_inputs input features and orlfaces.train.num_classes outputs), and b is
+# a orlfaces.train.num_classes-dimentional vector (because we have orlfaces.train.num_classes classes).
+W = tf.Variable(tf.zeros([orlfaces.train.num_inputs, orlfaces.train.num_classes]))
+b = tf.Variable(tf.zeros([orlfaces.train.num_classes]))
 
 # To use Variable within a session, they must be initialized using that session.
 # "This step takes the initial values (in this case tensors full of zeros) that have
