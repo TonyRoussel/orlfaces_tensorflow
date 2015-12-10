@@ -69,17 +69,24 @@ h_pool2 = max_pool_2x2(h_conv2)
 
 # "In order to build a deep network, we stack several layers of this type.
 # The second layer will have 64 features for each 5x5 patch."
-W_conv3 = weight_variable([5, 5, 32, 64])
-b_conv3 = bias_variable([64])
+W_conv3 = weight_variable([5, 5, 64, 128])
+b_conv3 = bias_variable([128])
 h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)
 h_pool3 = max_pool_2x2(h_conv3)
 
 # "In order to build a deep network, we stack several layers of this type.
 # The second layer will have 64 features for each 5x5 patch."
-W_conv4 = weight_variable([5, 5, 32, 64])
-b_conv4 = bias_variable([64])
+W_conv4 = weight_variable([5, 5, 128, 256])
+b_conv4 = bias_variable([256])
 h_conv4 = tf.nn.relu(conv2d(h_pool3, W_conv4) + b_conv4)
 h_pool4 = max_pool_2x2(h_conv4)
+
+# "In order to build a deep network, we stack several layers of this type.
+# The second layer will have 64 features for each 5x5 patch."
+W_conv5 = weight_variable([5, 5, 256, 512])
+b_conv5 = bias_variable([512])
+h_conv5 = tf.nn.relu(conv2d(h_pool4, W_conv5) + b_conv5)
+h_pool5 = max_pool_2x2(h_conv5)
 
 
 
@@ -87,10 +94,10 @@ h_pool4 = max_pool_2x2(h_conv4)
 # with 1024 neurons to allow processing on the entire image. We reshape the tensor
 #  from the pooling layer into a batch of vectors, multiply by a weight matrix,
 #  add a bias, and apply a ReLU."
-W_fc1 = weight_variable([7 * 7 * 64, 1024])
+W_fc1 = weight_variable([7 * 7 * 1024, 1024])
 b_fc1 = bias_variable([1024])
-h_pool4_flat = tf.reshape(h_pool4, [-1, 7 * 7 * 64])
-h_fc1 = tf.nn.relu(tf.matmul(h_pool4_flat, W_fc1) + b_fc1)
+h_pool5_flat = tf.reshape(h_pool5, [-1, 7 * 7 * 1024])
+h_fc1 = tf.nn.relu(tf.matmul(h_pool5_flat, W_fc1) + b_fc1)
 
 # "To reduce overfitting, we will apply dropout before the readout layer.
 # We create a placeholder for the probability that a neuron's output is kept during dropout.
