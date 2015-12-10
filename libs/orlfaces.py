@@ -13,7 +13,6 @@ class Data(object):
                                                    labels.shape))
         self._num_classes = labels[0].shape[0]
         self._num_examples = images.shape[0]
-        self._num_inputs = images.shape[1]
         # Convert shape from [num examples, rows, columns, depth]
         # to [num examples, rows*columns] (assuming depth == 1)
         assert images.shape[3] == 1
@@ -22,6 +21,7 @@ class Data(object):
         # Convert from [0, 255] -> [0.0, 1.0].
         images = images.astype(np.float32)
         images = np.multiply(images, 1.0 / 255.0)
+        self._num_inputs = images.shape[1]
         self._images = images
         self._labels = labels
         self._epochs_completed = 0
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
 
     orlfaces = orlfaces_loader(sys.argv[1:])
-    print "orlfaces_loader returned"
+    print "orlfaces_loader returned", orlfaces.train.num_classes, orlfaces.train.num_inputs
     print "type(orlfaces.train.images)"
     print type(orlfaces.train.images) # expect <type 'numpy.ndarray'>
     print orlfaces.train.images.shape # expect tuple w\ (num imgs, img flat size)
