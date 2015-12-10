@@ -3,6 +3,7 @@
 import libs.orlfaces as lo
 import tensorflow as tf
 import pprint as pp
+import sys
 
 
 # "The role of the Python code is therefore to build this external computation graph,
@@ -10,11 +11,8 @@ import pprint as pp
 
 
 # orlfaces is a class which store training, validation and testing sets as numpy arrays.
-orlfaces = lo.orlfaces_loader(["/home/mee/TensorFlowORLFaces/orl_faces/s1/",
-                               "/home/mee/TensorFlowORLFaces/orl_faces/s2/",
-                               "/home/mee/TensorFlowORLFaces/orl_faces/s3/",
-                               "/home/mee/TensorFlowORLFaces/orl_faces/s4/",
-                               "/home/mee/TensorFlowORLFaces/orl_faces/s5/"])
+orlfaces = lo.orlfaces_loader(sys.argv[1:])
+print orlfaces.train.num_inputs, orlfaces.train.num_classes
 
 # A Session is use to  execute ops in the graph.
 # Here we use an InteractiveSession to gain flexibility
