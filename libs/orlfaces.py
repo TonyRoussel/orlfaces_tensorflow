@@ -77,7 +77,7 @@ def orlfaces_loader(paths):
     mtx_stack = list()
     lbl_stack = list()
     class_i = 0
-    print "orlfaces_loader: found %d class" % nclass ######
+    print "orlfaces_loader: found %d class" % nclass
     for path in paths:
         print "orlfaces_loader: in [%s]" % path #####
         for i, filename in enumerate(os.listdir(path)):
@@ -119,6 +119,7 @@ if __name__ == "__main__":
 
 
     orlfaces = orlfaces_loader(sys.argv[1:])
+    print "orlfaces_loader returned"
     print "type(orlfaces.train.images)"
     print type(orlfaces.train.images) # expect <type 'numpy.ndarray'>
     print orlfaces.train.images.shape # expect tuple w\ (num imgs, img flat size)
