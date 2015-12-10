@@ -54,7 +54,7 @@ y = tf.nn.softmax(tf.matmul(x, W) + b)
 
 # The cost function to be minimized during training can be specified just as easily.
 # Our cost function will be the cross-entropy between the target and the model's prediction.
-cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
+cross_entropy = -tf.reduce_sum(y_ * tf.log(y)) # should be change --> http://stackoverflow.com/questions/33712178/tensorflow-nan-bug
 
 # Now that the model is describe, we can use TensorFlow to train it.
 # "For this example, we will use steepest gradient descent, with a step length of 0.01,
