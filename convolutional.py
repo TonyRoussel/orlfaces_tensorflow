@@ -36,8 +36,8 @@ def max_pool_2x2(x):
 
 orlfaces = lo.orlfaces_loader(["/home/shortyp/orlfaces_tensorflow/orl_faces/s1/",
                                "/home/shortyp/orlfaces_tensorflow/orl_faces/s2/"])
-x = tf.placeholder("float", shape=[None, 10304])
-y_ = tf.placeholder("float", shape=[None, 2])
+x = tf.placeholder("float", shape=[None, orlfaces.train.num_inputs])
+y_ = tf.placeholder("float", shape=[None, orlfaces.train.num_classes])
 
 # "We can now implement our first layer
 # It will consist of convolution, followed by max pooling. The convolutional will compute
@@ -84,8 +84,8 @@ h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 
 # Last layer declaration with softmax activation like the one layer version
-W_fc2 = weight_variable([1024, 2])
-b_fc2 = bias_variable([2])
+W_fc2 = weight_variable([1024, orlfaces.train.num_classes])
+b_fc2 = bias_variable([orlfaces.train.num_classes])
 y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 sess = tf.InteractiveSession()
