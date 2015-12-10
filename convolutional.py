@@ -69,9 +69,9 @@ h_pool2 = max_pool_2x2(h_conv2)
 # with 1024 neurons to allow processing on the entire image. We reshape the tensor
 #  from the pooling layer into a batch of vectors, multiply by a weight matrix,
 #  add a bias, and apply a ReLU."
-W_fc1 = weight_variable([7 * 7 * 64, 1024])
+W_fc1 = weight_variable([28 * 23 * 64, 1024])
 b_fc1 = bias_variable([1024])
-h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
+h_pool2_flat = tf.reshape(h_pool2, [-1, 28 * 23 * 64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
 # "To reduce overfitting, we will apply dropout before the readout layer.
