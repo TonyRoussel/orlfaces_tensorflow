@@ -11,7 +11,9 @@ class Data(object):
         assert images.shape[0] == labels.shape[0], (
             "images.shape: %s labels.shape: %s" % (images.shape,
                                                    labels.shape))
+        self._num_classes = labels[0].shape[0]
         self._num_examples = images.shape[0]
+        self._num_inputs = images.shape[1]
         # Convert shape from [num examples, rows, columns, depth]
         # to [num examples, rows*columns] (assuming depth == 1)
         assert images.shape[3] == 1
@@ -37,6 +39,14 @@ class Data(object):
     @property
     def num_examples(self):
         return self._num_examples
+
+    @property
+    def num_classes(self):
+        return self._num_classes
+
+    @property
+    def num_inputs(self):
+        return self._num_inputs
 
     @property
     def epochs_completed(self):
