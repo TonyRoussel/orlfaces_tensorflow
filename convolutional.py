@@ -1,8 +1,9 @@
 #!/usr/bin/env python2.7
 
-import input_data
+import libs.orlfaces as lo
 import tensorflow as tf
 import pprint as pp
+import sys
 
 
 # For this model we'll need "to create a lot of weights and biases"
@@ -34,8 +35,7 @@ def max_pool_2x2(x):
 
 
 
-orlfaces = lo.orlfaces_loader(["/home/shortyp/orlfaces_tensorflow/orl_faces/s1/",
-                               "/home/shortyp/orlfaces_tensorflow/orl_faces/s2/"])
+orlfaces = lo.orlfaces_loader(sys.argv[1:])
 x = tf.placeholder("float", shape=[None, orlfaces.train.num_inputs])
 y_ = tf.placeholder("float", shape=[None, orlfaces.train.num_classes])
 
@@ -101,7 +101,7 @@ correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 sess.run((tf.initialize_all_variables()))
 for i in xrange(1000):
-    batch = orlfaces.train.next_batch(50)
+    batch = orlfaces.train.next_batch(10)
     if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
         print "Step %d, training accuracy %g" % (i, train_accuracy)
