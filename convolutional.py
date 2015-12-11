@@ -113,6 +113,10 @@ W_fc2 = weight_variable([1024, orlfaces.train.num_classes])
 b_fc2 = bias_variable([orlfaces.train.num_classes])
 y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
+print y_conv.get_shape() ###
+print y_.get_shape() ###
+
+
 sess = tf.InteractiveSession()
 
 # "How well does this model do? To train and evaluate it we will use code that is nearly
@@ -127,6 +131,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 sess.run((tf.initialize_all_variables()))
 for i in xrange(1000):
     batch = orlfaces.train.next_batch(10)
+    print batch[0].shape, batch[1].shape
+    print batch[0][0].shape, batch[1][0].shape
     if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
         print "Step %d, training accuracy %g" % (i, train_accuracy)
