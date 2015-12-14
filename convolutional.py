@@ -134,7 +134,7 @@ h_fc1 = tf.nn.relu(tf.matmul(h_pool5_flat, W_fc1) + b_fc1)
 print "AFTER 5TH LAYER DECLARATION" ########
 print "W_fc1:", W_fc1.get_shape() #########
 print "b_fc1:", b_fc1.get_shape() #########
-print "h_pool3_flat:", h_pool5_flat.get_shape() #########
+print "h_pool5_flat:", h_pool5_flat.get_shape() #########
 print "h_fc1:", h_fc1.get_shape() #########
 
 # Last layer declaration with softmax activation like the one layer version
