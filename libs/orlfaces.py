@@ -82,7 +82,8 @@ def orlfaces_loader(paths):
         print "orlfaces_loader: in [%s]" % path #####
         for i, filename in enumerate(os.listdir(path)):
             img = misc.imread(path + filename)
-            label = np.ndarray(shape=(nclass,))
+            # label = np.ndarray(shape=(nclass,))
+            label = np.zeros(nclass) # np.ndarray(shape=(nclass,))
             label[nclass- 1 - class_i] = 1.
             mtx_stack.append(img)
             lbl_stack.append(label)
