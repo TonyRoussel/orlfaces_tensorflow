@@ -185,7 +185,8 @@ for i in xrange(1000):
     # print "max W vales: %g %g %g %g"%(tf.reduce_max(tf.abs(W_conv1)).eval(),tf.reduce_max(tf.abs(W_conv2)).eval(),tf.reduce_max(tf.abs(W_fc1)).eval(),tf.reduce_max(tf.abs(W_fc2)).eval())
     # print "max b vales: %g %g %g %g"%(tf.reduce_max(tf.abs(b_conv1)).eval(),tf.reduce_max(tf.abs(b_conv2)).eval(),tf.reduce_max(tf.abs(b_fc1)).eval(),tf.reduce_max(tf.abs(b_fc2)).eval())
     if i % 10 == 0:
-        train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
+        # train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
+        train_accuracy = accuracy.eval(feed_dict = {x: orlfaces.train.images, y_: orlfaces.train.labels, keep_prob: 1.0})
         print "Step %d, training accuracy %g" % (i, train_accuracy)
     _, loss = sess.run([train_step, cross_entropy], feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
     # train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
