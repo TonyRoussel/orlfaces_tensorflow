@@ -137,21 +137,11 @@ print "b_fc1:", b_fc1.get_shape() #########
 print "h_pool3_flat:", h_pool5_flat.get_shape() #########
 print "h_fc1:", h_fc1.get_shape() #########
 
-
-# "To reduce overfitting, we will apply dropout before the readout layer.
-# We create a placeholder for the probability that a neuron's output is kept during dropout.
-# This allows us to turn dropout on during training, and turn it off during testing.
-# TensorFlow's tf.nn.dropout op automatically handles scaling neuron outputs in addition
-# to masking them, so dropout just works without any additional scaling."
-keep_prob = tf.placeholder("float")
-h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
-
-
 # Last layer declaration with softmax activation like the one layer version
 W_fc2 = weight_variable([512, orlfaces.train.num_classes])
 b_fc2 = bias_variable([orlfaces.train.num_classes])
-logit = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
+logit = tf.matmul(h_fc1, W_fc2) + b_fc2
+y_conv = tf.nn.softmax(tf.matmul(h_fc1, W_fc2) + b_fc2)
 
 print "AFTER LAST LAYER DECLARATION" ########
 print "W_fc1:", W_fc2.get_shape() #########
@@ -167,9 +157,12 @@ sess = tf.InteractiveSession()
 # the more sophisticated ADAM optimizer; we will include the additional parameter
 # keep_prob in feed_dict to control the dropout rate"
 
+regularizers = (tf.nn.l2_loss(W_fc1) + tf.nn.l2_loss(b_fc1) +
+                    tf.nn.l2_loss(W_fc2) + tf.nn.l2_loss(b_fc2))
+
 # cross_entropy = -tf.reduce_sum(y_ * tf.log(y_conv))
 # cross_entropy = -tf.reduce_sum(y_ * tf.log(tf.clip_by_value(y_conv, 1e-10, 1.0)))
-cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logit, y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logit, y_)) + 1. * regularizers
 
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
@@ -186,10 +179,11 @@ for i in xrange(1000):
     # print "max b vales: %g %g %g %g"%(tf.reduce_max(tf.abs(b_conv1)).eval(),tf.reduce_max(tf.abs(b_conv2)).eval(),tf.reduce_max(tf.abs(b_fc1)).eval(),tf.reduce_max(tf.abs(b_fc2)).eval())
     if i % 10 == 0:
         # train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
-        train_accuracy = accuracy.eval(feed_dict = {x: orlfaces.train.images, y_: orlfaces.train.labels, keep_prob: 1.0})
-        print "Step %d, training accuracy %g" % (i, train_accuracy)
-    _, loss = sess.run([train_step, cross_entropy], feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+        train_accuracy = accuracy.eval(feed_dict = {x: orlfaces.train.images, y_: orlfaces.train.labels})
+        test_accuracy = accuracy.eval(feed_dict = {x: orlfaces.test.images, y_: orlfaces.test.labels})
+        print "Step %d, training accuracy %g | test accuracy %g" % (i, train_accuracy, test_accuracy)
+    _, loss = sess.run([train_step, cross_entropy], feed_dict={x: batch[0], y_: batch[1]})
     # train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
     print "loss = ", loss
 
-print "Test accuracy %g" % accuracy.eval(feed_dict = {x: orlfaces.test.images, y_: orlfaces.test.labels, keep_prob: 1.0})
+print "Test accuracy %g" % accuracy.eval(feed_dict = {x: orlfaces.test.images, y_: orlfaces.test.labels})
