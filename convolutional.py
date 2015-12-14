@@ -50,8 +50,8 @@ print "y_:", y_.get_shape() #########
 # and the last is the number of output channels. We will also have a bias vector with a
 # component for each output channel."
 # W_conv1 = weight_variable([patch_size_x, patch_size_y, num_input_channel, num_output_channel])
-W_conv1 = weight_variable([5, 5, 1, 32])
-b_conv1 = bias_variable([32])
+W_conv1 = weight_variable([5, 5, 1, 8])
+b_conv1 = bias_variable([8])
 
 # "To apply the layer, we first reshape x to a 4d tensor, with the second and third dimensions 
 # corresponding to image width and height, and the final dimension corresponding to the number of color channels."
@@ -70,8 +70,8 @@ print "h_pool1:", h_pool1.get_shape() #########
 
 # "In order to build a deep network, we stack several layers of this type.
 # The second layer will have 64 features for each 5x5 patch."
-W_conv2 = weight_variable([5, 5, 32, 64])
-b_conv2 = bias_variable([64])
+W_conv2 = weight_variable([5, 5, 8, 16])
+b_conv2 = bias_variable([16])
 h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
 h_pool2 = max_pool_2x2(h_conv2)
 
@@ -84,8 +84,8 @@ print "h_pool2:", h_pool2.get_shape() #########
 
 # "In order to build a deep network, we stack several layers of this type.
 # The second layer will have 64 features for each 5x5 patch."
-W_conv3 = weight_variable([5, 5, 64, 128])
-b_conv3 = bias_variable([128])
+W_conv3 = weight_variable([5, 5, 16, 32])
+b_conv3 = bias_variable([32])
 h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)
 h_pool3 = max_pool_2x2(h_conv3)
 
@@ -97,8 +97,8 @@ print "h_pool3:", h_pool3.get_shape() #########
 
 # "In order to build a deep network, we stack several layers of this type.
 # The second layer will have 64 features for each 5x5 patch."
-W_conv4 = weight_variable([5, 5, 128, 256])
-b_conv4 = bias_variable([256])
+W_conv4 = weight_variable([5, 5, 32, 64])
+b_conv4 = bias_variable([64])
 h_conv4 = tf.nn.relu(conv2d(h_pool3, W_conv4) + b_conv4)
 h_pool4 = max_pool_2x2(h_conv4)
 
@@ -110,8 +110,8 @@ print "h_pool4:", h_pool4.get_shape() #########
 
 # "In order to build a deep network, we stack several layers of this type.
 # The second layer will have 64 features for each 5x5 patch."
-W_conv5 = weight_variable([5, 5, 256, 512])
-b_conv5 = bias_variable([512])
+W_conv5 = weight_variable([5, 5, 64, 128])
+b_conv5 = bias_variable([128])
 h_conv5 = tf.nn.relu(conv2d(h_pool4, W_conv5) + b_conv5)
 h_pool5 = max_pool_2x2(h_conv5)
 
@@ -126,9 +126,9 @@ print "h_pool5:", h_pool5.get_shape() #########
 # with 1024 neurons to allow processing on the entire image. We reshape the tensor
 #  from the pooling layer into a batch of vectors, multiply by a weight matrix,
 #  add a bias, and apply a ReLU."
-W_fc1 = weight_variable([4 * 3 * 512, 6144])
-b_fc1 = bias_variable([6144])
-h_pool5_flat = tf.reshape(h_pool5, [-1, 4 * 3 * 512])
+W_fc1 = weight_variable([4 * 3 * 128, 512])
+b_fc1 = bias_variable([512])
+h_pool5_flat = tf.reshape(h_pool5, [-1, 4 * 3 * 128])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool5_flat, W_fc1) + b_fc1)
 
 print "AFTER 5TH LAYER DECLARATION" ########
@@ -148,7 +148,7 @@ h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 
 # Last layer declaration with softmax activation like the one layer version
-W_fc2 = weight_variable([6144, orlfaces.train.num_classes])
+W_fc2 = weight_variable([512, orlfaces.train.num_classes])
 b_fc2 = bias_variable([orlfaces.train.num_classes])
 logit = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
