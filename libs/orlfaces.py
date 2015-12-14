@@ -1,6 +1,7 @@
 from scipy import misc
 import os
 import numpy as np
+from random import shuffle
 
 
 class Datas(object):
@@ -92,7 +93,9 @@ def orlfaces_loader(paths):
     cols = mtx_stack[0].shape[1]
     channel = 1
 
-    train, test = split_list(zip(mtx_stack, lbl_stack), 70)
+    all_stack = zip(mtx_stack, lbl_stack)
+    shuffle(all_stack)
+    train, test = split_list(all_stack, 70)
     imgs_train_stack, labels_train_stack = zip(*train)
     imgs_test_stack, labels_test_stack = zip(*test)
     
