@@ -169,11 +169,9 @@ sess = tf.InteractiveSession()
 
 # cross_entropy = -tf.reduce_sum(y_ * tf.log(y_conv))
 # cross_entropy = -tf.reduce_sum(y_ * tf.log(tf.clip_by_value(y_conv, 1e-10, 1.0)))
-cross_entropy = -tf.reduce_sum(tf.clip_by_value(y_, 1e-10, 1.0) * tf.log(tf.clip_by_value(y_conv, 1e-10, 1.0)))
-# cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logit, y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logit, y_))
 
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-# train_step = tf.train.GradientDescentOptimizer(0.).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
