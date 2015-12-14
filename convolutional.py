@@ -187,7 +187,8 @@ for i in xrange(1000):
     if i % 10 == 0:
         # train_accuracy = accuracy.eval(feed_dict = {x: batch[0], y_: batch[1], keep_prob: 1.0})
         train_accuracy = accuracy.eval(feed_dict = {x: orlfaces.train.images, y_: orlfaces.train.labels, keep_prob: 1.0})
-        print "Step %d, training accuracy %g" % (i, train_accuracy)
+        test_accuracy = accuracy.eval(feed_dict = {x: orlfaces.test.images, y_: orlfaces.test.labels, keep_prob: 1.0})
+        print "Step %d, training accuracy %g | test accuracy %g" % (i, train_accuracy, test_accuracy)
     _, loss = sess.run([train_step, cross_entropy], feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
     # train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
     print "loss = ", loss
